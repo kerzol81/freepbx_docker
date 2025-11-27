@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  freepbx:
+    build: .
+    container_name: freepbx
+    privileged: true
+    environment:
+      - TZ=Europe/Budapest
+    ports:
+      # Web UI
+      - "80:80"
+      - "443:443"
+      # SIP (TCP + UDP)
+      - "5060:5060/tcp"
+      - "5060:5060/udp"
+      - "5061:5061/tcp"
+      - "5061:5061/udp"
+      - "5160:5160/tcp"
+      - "5160:5160/udp"
+      # RTP
+      - "10000-20000:10000-20000/udp"
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - freepbx_etc_asterisk:/etc/asterisk
+      - freepbx_var_lib_asterisk:/var/lib/asterisk
+      - freepbx_var_spool_asterisk:/var/spool/asterisk
+      - freepbx_var_log_asterisk:/var/log/asterisk
+      - freepbx_www_html:/var/www/html
+      - freepbx_mysql:/var/lib/mysql
+
+    restart: unless-stopped
+
+volumes:
+  freepbx_etc_asterisk:
+  freepbx_var_lib_asterisk:
+  freepbx_var_spool_asterisk:
+  freepbx_var_log_asterisk:
+  freepbx_www_html:
+  freepbx_mysql:
